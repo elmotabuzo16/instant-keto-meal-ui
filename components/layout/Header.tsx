@@ -1,16 +1,75 @@
 'use client';
 
 import Link from 'next/link';
-import React, { useEffect, useState } from 'react';
-import { isAuth } from '@/lib/authAction';
+import { useRouter } from 'next/navigation';
+import React, { useMemo, useState, useSyncExternalStore } from 'react';
+import {
+  AUTH_CHANGED_EVENT,
+  AUTH_STORAGE_KEY,
+  getAuthDisplayName,
+  logout,
+  type AuthResponse,
+} from '@/lib/authAction';
+
+const getAuthSnapshot = (): string => {
+  if (typeof window === 'undefined') {
+    return '';
+  }
+
+  return window.localStorage.getItem(AUTH_STORAGE_KEY) ?? '';
+};
+
+const getServerAuthSnapshot = (): string => '';
+
+const subscribeToAuth = (onStoreChange: () => void): (() => void) => {
+  if (typeof window === 'undefined') {
+    return () => {};
+  }
+
+  const handleStorage = (event: StorageEvent): void => {
+    if (event.key === AUTH_STORAGE_KEY) {
+      onStoreChange();
+    }
+  };
+
+  window.addEventListener('storage', handleStorage);
+  window.addEventListener(AUTH_CHANGED_EVENT, onStoreChange);
+
+  return () => {
+    window.removeEventListener('storage', handleStorage);
+    window.removeEventListener(AUTH_CHANGED_EVENT, onStoreChange);
+  };
+};
 
 const Header = () => {
+  const router = useRouter();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [loggedIn, setLoggedIn] = useState(false);
+  const authSnapshot = useSyncExternalStore(
+    subscribeToAuth,
+    getAuthSnapshot,
+    getServerAuthSnapshot
+  );
+  const auth = useMemo<AuthResponse | false>(() => {
+    if (!authSnapshot) {
+      return false;
+    }
 
-  useEffect(() => {
-    setLoggedIn(Boolean(isAuth()));
-  }, []);
+    try {
+      return JSON.parse(authSnapshot) as AuthResponse;
+    } catch {
+      return false;
+    }
+  }, [authSnapshot]);
+
+  const loggedIn = Boolean(auth);
+  const displayName = getAuthDisplayName(auth);
+
+  const handleLogout = (): void => {
+    logout();
+    setMobileMenuOpen(false);
+    router.push('/');
+    router.refresh();
+  };
 
   return (
     <header className="bg-white text-slate-900 border-b border-slate-100 shadow-sm">
@@ -32,19 +91,36 @@ const Header = () => {
           </Link>
           {loggedIn && (
             <Link href="/profile/favorites" className="nav-link text-slate-700 hover:text-slate-900">
-              Saved
+              Saved Recipes
             </Link>
           )}
         </nav>
 
         {/* Desktop Auth Buttons */}
         <div className="hidden md:flex items-center gap-4 text-sm ml-auto">
-          <Link href="/register" className="border border-slate-300 px-3 py-1.5 text-slate-700 transition hover:border-[#4A2518] hover:text-[#4A2518]">
-            Register
-          </Link>
-          <Link href="/login" className="border border-[#2b170f] bg-[#4A2518] px-3 py-1.5 text-white transition hover:bg-[#3A1C12]">
-            Login
-          </Link>
+          {loggedIn ? (
+            <>
+              <span className="max-w-40 truncate font-semibold text-slate-700">
+                {displayName ? `Hello, ${displayName}` : 'My Account'}
+              </span>
+              <button
+                type="button"
+                onClick={handleLogout}
+                className="!text-white border border-[#2b170f] bg-[#4A2518] px-3 py-1.5 transition hover:bg-[#3A1C12]"
+              >
+                Logout
+              </button>
+            </>
+          ) : (
+            <>
+              <Link href="/register" className="border border-slate-300 px-3 py-1.5 text-slate-700 transition hover:border-[#4A2518] hover:text-[#4A2518]">
+                Register
+              </Link>
+              <Link href="/login" className="border border-[#2b170f] bg-[#4A2518] px-3 py-1.5 text-white transition hover:bg-[#3A1C12]">
+                Login
+              </Link>
+            </>
+          )}
         </div>
 
         {/* Hamburger Menu Button - Mobile Only */}
@@ -96,20 +172,37 @@ const Header = () => {
           </nav>
 
           <div className="flex flex-col gap-2 text-sm border-t border-slate-100 pt-4">
-            <Link
-              href="/register"
-              className="border border-slate-300 px-4 py-2 text-center text-slate-700 transition hover:border-[#4A2518] hover:text-[#4A2518]"
-              onClick={() => setMobileMenuOpen(false)}
-            >
-              Register
-            </Link>
-            <Link
-              href="/login"
-              className="border border-[#2b170f] bg-[#4A2518] px-4 py-2 text-center text-white transition hover:bg-[#3A1C12]"
-              onClick={() => setMobileMenuOpen(false)}
-            >
-              Login
-            </Link>
+            {loggedIn ? (
+              <>
+                <span className="truncate px-1 py-2 font-semibold text-slate-700">
+                  {displayName ? `Hello, ${displayName}` : 'My Account'}
+                </span>
+                <button
+                  type="button"
+                  className="!text-white border border-[#2b170f] bg-[#4A2518] px-4 py-2 text-center transition hover:bg-[#3A1C12]"
+                  onClick={handleLogout}
+                >
+                  Logout
+                </button>
+              </>
+            ) : (
+              <>
+                <Link
+                  href="/register"
+                  className="border border-slate-300 px-4 py-2 text-center text-slate-700 transition hover:border-[#4A2518] hover:text-[#4A2518]"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  Register
+                </Link>
+                <Link
+                  href="/login"
+                  className="border border-[#2b170f] bg-[#4A2518] px-4 py-2 text-center text-white transition hover:bg-[#3A1C12]"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  Login
+                </Link>
+              </>
+            )}
           </div>
         </div>
       )}

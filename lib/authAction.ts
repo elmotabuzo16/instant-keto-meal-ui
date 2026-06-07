@@ -1,5 +1,8 @@
 import { API } from './config';
 
+export const AUTH_STORAGE_KEY = 'user';
+export const AUTH_CHANGED_EVENT = 'auth-changed';
+
 export type LoginUser = {
   emailOrUsername: string;
   password: string;
@@ -15,7 +18,17 @@ export type RegisterUser = {
 export type AuthResponse = {
   error?: string;
   token?: string;
-  user?: unknown;
+  user?: {
+    name?: string;
+    username?: string;
+    email?: string;
+    isAdmin?: boolean;
+    [key: string]: unknown;
+  };
+  name?: string;
+  username?: string;
+  email?: string;
+  isAdmin?: boolean;
   [key: string]: unknown;
 };
 
@@ -52,7 +65,15 @@ export const signup = async (user: RegisterUser): Promise<AuthResponse> => {
 
 export const authenticate = (data: AuthResponse): void => {
   if (typeof window !== 'undefined') {
-    window.localStorage.setItem('user', JSON.stringify(data));
+    window.localStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify(data));
+    window.dispatchEvent(new Event(AUTH_CHANGED_EVENT));
+  }
+};
+
+export const logout = (): void => {
+  if (typeof window !== 'undefined') {
+    window.localStorage.removeItem(AUTH_STORAGE_KEY);
+    window.dispatchEvent(new Event(AUTH_CHANGED_EVENT));
   }
 };
 
@@ -61,7 +82,7 @@ export const isAuth = (): AuthResponse | false => {
     return false;
   }
 
-  const user = window.localStorage.getItem('user');
+  const user = window.localStorage.getItem(AUTH_STORAGE_KEY);
 
   return user ? (JSON.parse(user) as AuthResponse) : false;
 };
@@ -70,6 +91,14 @@ export const getAuthToken = (): string | null => {
   const user = isAuth();
 
   return typeof user === 'object' && typeof user.token === 'string' ? user.token : null;
+};
+
+export const getAuthDisplayName = (auth: AuthResponse | false): string => {
+  if (!auth) {
+    return '';
+  }
+
+  return auth.name ?? auth.user?.name ?? auth.username ?? auth.user?.username ?? auth.email ?? auth.user?.email ?? '';
 };
 
 export const getRecipeSlug = (): { recipeSlug?: string } | false => {
