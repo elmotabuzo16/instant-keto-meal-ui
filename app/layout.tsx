@@ -18,6 +18,8 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+const GOOGLE_ANALYTICS_ID = "G-E4TE07PS41";
+
 export const metadata: Metadata = {
   metadataBase: new URL(DOMAIN),
   title: {
@@ -80,6 +82,18 @@ export default function RootLayout({
         crossOrigin="anonymous"
         strategy="beforeInteractive"
       />
+      <Script
+        src={`https://www.googletagmanager.com/gtag/js?id=${GOOGLE_ANALYTICS_ID}`}
+        strategy="afterInteractive"
+      />
+      <Script id="google-analytics" strategy="afterInteractive">
+        {`
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', '${GOOGLE_ANALYTICS_ID}');
+        `}
+      </Script>
       <body className="min-h-full flex min-h-screen flex-col">
         <Suspense fallback={null}>
           <RouteLoadingBar />

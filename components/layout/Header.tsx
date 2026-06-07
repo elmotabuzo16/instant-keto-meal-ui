@@ -89,6 +89,9 @@ const Header = () => {
           <Link href="/about" className="nav-link text-slate-700 hover:text-slate-900">
             About
           </Link>
+          <Link href="/contact" className="nav-link text-slate-700 hover:text-slate-900">
+            Contact
+          </Link>
           {loggedIn && (
             <Link href="/profile/favorites" className="nav-link text-slate-700 hover:text-slate-900">
               Saved Recipes
@@ -159,6 +162,13 @@ const Header = () => {
               onClick={() => setMobileMenuOpen(false)}
             >
               About
+            </Link>
+            <Link
+              href="/contact"
+              className="nav-link hover:text-slate-900 block py-2"
+              onClick={() => setMobileMenuOpen(false)}
+            >
+              Contact
             </Link>
             {loggedIn && (
               <Link
