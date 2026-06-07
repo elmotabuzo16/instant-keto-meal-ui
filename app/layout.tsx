@@ -29,6 +29,9 @@ export const metadata: Metadata = {
   applicationName: APP_NAME,
   creator: APP_NAME,
   publisher: APP_NAME,
+  other: {
+    "google-adsense-account": "ca-pub-7167271672127418",
+  },
   icons: {
     icon: "/grains.ico",
     shortcut: "/grains.ico",
@@ -72,12 +75,12 @@ export default function RootLayout({
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
+      <Script
+        src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7167271672127418"
+        crossOrigin="anonymous"
+        strategy="beforeInteractive"
+      />
       <body className="min-h-full flex min-h-screen flex-col">
-        <Script
-          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7167271672127418"
-          crossOrigin="anonymous"
-          strategy="afterInteractive"
-        />
         <Suspense fallback={null}>
           <RouteLoadingBar />
         </Suspense>
