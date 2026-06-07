@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Script from 'next/script';
 import { notFound } from 'next/navigation';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
@@ -315,6 +316,25 @@ export default async function RecipePage({ params }: RecipePageProps) {
                   </div>
                 </div>
               </section>
+
+              <div className="border border-slate-200 bg-white p-6 shadow-sm">
+                <h2 className="font-serif text-2xl font-semibold text-slate-950">
+                  Sponsored
+                </h2>
+                <div className="mt-5">
+                  <ins
+                    className="adsbygoogle"
+                    style={{ display: 'block' }}
+                    data-ad-client="ca-pub-7167271672127418"
+                    data-ad-slot="REPLACE_WITH_AD_SLOT"
+                    data-ad-format="auto"
+                    data-full-width-responsive="true"
+                  />
+                  <Script id={`ads-push-${recipe.slug}`} strategy="afterInteractive">
+                    {`(adsbygoogle = window.adsbygoogle || []).push({});`}
+                  </Script>
+                </div>
+              </div>
 
               {servings.length > 0 && (
                 <section className="border border-slate-200 bg-white p-6 shadow-sm">

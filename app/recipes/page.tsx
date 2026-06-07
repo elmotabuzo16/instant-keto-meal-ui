@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Script from 'next/script';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
 import { fetchRecipesByCategory } from '@/lib/generatorAction';
@@ -61,6 +62,22 @@ export default async function RecipesPage({ searchParams }: RecipesPageProps) {
             </p>
           </div>
         </section>
+
+        <div className="mx-auto max-w-5xl px-4 py-6 sm:px-6 lg:px-8">
+          <div className="mx-auto max-w-3xl">
+            <ins
+              className="adsbygoogle"
+              style={{ display: 'block' }}
+              data-ad-client="ca-pub-7167271672127418"
+              data-ad-slot="REPLACE_WITH_AD_SLOT"
+              data-ad-format="auto"
+              data-full-width-responsive="true"
+            />
+            <Script id="ads-recipes-push" strategy="afterInteractive">
+              {`(adsbygoogle = window.adsbygoogle || []).push({});`}
+            </Script>
+          </div>
+        </div>
 
         <section className="mx-auto max-w-5xl px-4 py-14 sm:px-6 lg:px-8">
           {!category ? (

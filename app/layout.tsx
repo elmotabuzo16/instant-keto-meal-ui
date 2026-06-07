@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { Suspense } from "react";
+import Script from "next/script";
 import RouteLoadingBar from "@/components/layout/RouteLoadingBar";
 import { APP_NAME, DOMAIN } from "@/lib/config";
 import { defaultOgImage, defaultSeoDescription, defaultSeoKeywords } from "@/lib/seo";
@@ -72,6 +73,11 @@ export default function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex min-h-screen flex-col">
+        <Script
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7167271672127418"
+          crossOrigin="anonymous"
+          strategy="afterInteractive"
+        />
         <Suspense fallback={null}>
           <RouteLoadingBar />
         </Suspense>
