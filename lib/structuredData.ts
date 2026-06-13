@@ -30,9 +30,9 @@ export const buildWebsiteJsonLd = (): JsonLdObject => ({
   '@type': 'WebSite',
   name: APP_NAME,
   url: SITE_URL,
-  inLanguage: 'en-US',
+  inLanguage: 'en',
   description:
-    'A free keto meal generator and low-carb meal planning website for quick, simple meal ideas in the United States.',
+    'A free keto meal generator and low-carb meal planning website for quick, simple meal ideas.',
 });
 
 export const buildOrganizationJsonLd = (): JsonLdObject => ({
@@ -52,18 +52,10 @@ export const buildWebApplicationJsonLd = (): JsonLdObject => ({
   operatingSystem: 'Any',
   browserRequirements: 'Requires a modern web browser',
   isAccessibleForFree: true,
-  inLanguage: 'en-US',
-  audience: {
-    '@type': 'Audience',
-    geographicArea: {
-      '@type': 'Country',
-      name: 'United States',
-    },
-  },
+  inLanguage: 'en',
   offers: {
     '@type': 'Offer',
     price: '0',
-    priceCurrency: 'USD',
   },
   description:
     'Generate quick keto meals, low-carb recipe ideas, and simple meal planning inspiration for breakfast, lunch, dinner, snacks, and desserts.',

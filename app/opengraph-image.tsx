@@ -44,7 +44,7 @@ export default function Image() {
               textTransform: 'uppercase',
             }}
           >
-            Free keto meal planner for US kitchens
+            Free keto meal planner
           </div>
           <div
             style={{

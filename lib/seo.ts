@@ -4,7 +4,7 @@ import { APP_NAME, DOMAIN, FB_APP_ID } from './config';
 const SITE_URL = DOMAIN.replace(/\/$/, '');
 
 export const defaultSeoDescription =
-  'Use a free keto meal generator for quick low-carb meal ideas, simple keto recipes, and budget-friendly meal planning for busy people in the United States.';
+  'Use a free keto meal generator for quick low-carb meal ideas, simple keto recipes, and budget-friendly meal planning for busy people.';
 
 export const defaultSeoKeywords = [
   'keto meal generator',
@@ -14,7 +14,7 @@ export const defaultSeoKeywords = [
   'easy keto meals',
   'low carb meal generator',
   'low carb meal planner',
-  'keto recipes USA',
+  'keto recipes',
   'keto diet meal plan',
   'keto meals for weight loss',
   'quick keto meals',
@@ -75,7 +75,6 @@ export const buildSeoMetadata = ({
       description,
       url: canonicalUrl,
       siteName: APP_NAME,
-      locale: 'en_US',
       type,
       images: [
         {

@@ -5,7 +5,7 @@ import Footer from "@/components/layout/Footer";
 import Generator from "@/components/generator/Generator";
 import FeaturedMealsSection from "@/components/featuredmeals";
 import FeaturedMealsSkeleton from "@/components/featuredmeals/FeaturedMealsSkeleton";
-import { fetchTags } from "@/lib/generatorAction";
+import { fetchFeaturedMeals, fetchTags } from "@/lib/generatorAction";
 import { APP_NAME } from "@/lib/config";
 import { buildSeoMetadata, defaultSeoDescription } from "@/lib/seo";
 import {
@@ -71,15 +71,6 @@ const howItWorks = [
   },
 ];
 
-const popularUsMeals = [
-  "Bacon and avocado egg bowls",
-  "Bunless cheeseburger plates",
-  "Garlic butter chicken with broccoli",
-  "Steak salad with ranch or blue cheese",
-  "Buffalo chicken lettuce wraps",
-  "Taco bowls with cauliflower rice",
-];
-
 const budgetMeals = [
   "Egg muffins with cheese and spinach",
   "Tuna salad lettuce cups",
@@ -91,7 +82,7 @@ const budgetMeals = [
 
 const busyPlanningTips = [
   "Plan two repeatable breakfasts, two packable lunches, and three quick dinners for the week.",
-  "Keep US grocery staples on hand: eggs, rotisserie chicken, canned tuna, ground beef, salad kits, cheese, avocado, and frozen broccoli.",
+  "Keep simple grocery staples on hand: eggs, rotisserie chicken, canned tuna, ground beef, salad kits, cheese, avocado, and frozen broccoli.",
   "Use generated recipes as starting points, then swap proteins or vegetables based on what is affordable near you.",
 ];
 
@@ -104,10 +95,10 @@ const homepageFaqs: FaqItem[] = [
   {
     question: "Can I use these keto meal ideas for weight loss?",
     answer:
-      "Many people in the United States use keto meals to support weight-loss goals, but results depend on calories, portions, health history, and consistency. Use the nutrition details as a planning aid and ask a qualified professional for personal medical advice.",
+      "Many people use keto meals to support weight-loss goals, but results depend on calories, portions, health history, and consistency. Use the nutrition details as a planning aid and ask a qualified professional for personal medical advice.",
   },
   {
-    question: "What are easy keto meals for busy Americans?",
+    question: "What are easy keto meals for busy people?",
     answer:
       "Popular quick options include bunless burger bowls, egg bites, chicken salad lettuce wraps, taco bowls with cauliflower rice, steak salads, and garlic butter chicken with broccoli.",
   },
@@ -117,9 +108,9 @@ const homepageFaqs: FaqItem[] = [
       "Yes. The generator focuses on keto-friendly and low-carb meal ideas with ingredients, cooking steps, and nutrition details where available.",
   },
   {
-    question: "Are the recipes suitable for US grocery stores?",
+    question: "Are the recipes suitable for regular grocery stores?",
     answer:
-      "The homepage examples focus on ingredients commonly found in US grocery stores, such as eggs, chicken, ground beef, tuna, cheese, avocado, broccoli, salad greens, and cauliflower rice.",
+      "The homepage examples focus on common ingredients such as eggs, chicken, ground beef, tuna, cheese, avocado, broccoli, salad greens, and cauliflower rice.",
   },
 ];
 
@@ -138,12 +129,18 @@ export const metadata = buildSeoMetadata({
     'low carb meal planner',
     'keto meals for weight loss',
     'keto diet meal plan',
-    'keto recipes USA',
+    'keto recipes',
   ],
 });
 
 export default async function Home(): Promise<ReactElement> {
-  const tags = await fetchTags();
+  const [tags, popularMealsData] = await Promise.all([
+    fetchTags(),
+    fetchFeaturedMeals("Meal"),
+  ]);
+  const popularMeals = Array.isArray(popularMealsData)
+    ? popularMealsData.filter((meal) => Boolean(meal.name)).slice(0, 6)
+    : [];
 
   return (
     <>
@@ -158,13 +155,13 @@ export default async function Home(): Promise<ReactElement> {
             <div className="relative mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
               <section id="homepage" className="mb-12 text-center">
                 <p className="text-sm font-black uppercase tracking-[0.24em] text-emerald-800">
-                  Free keto meal planner for US kitchens
+                  Free keto meal planner
                 </p>
                 <h1 className="mx-auto mt-4 max-w-4xl font-serif text-4xl font-semibold tracking-tight text-slate-950 sm:text-5xl">
                   Keto meal generator for quick, low-carb meal ideas
                 </h1>
                 <p className="mx-auto mt-6 max-w-3xl text-base leading-8 text-slate-600">
-                  Instant Keto Meal helps US home cooks find easy keto meals, low-carb recipes, and simple meal planning ideas without digging through endless recipe lists.
+                  Instant Keto Meal helps home cooks find easy keto meals, low-carb recipes, and simple meal planning ideas without digging through endless recipe lists.
                 </p>
                 <p className="mx-auto mt-4 max-w-2xl text-base leading-8 text-slate-600">
                   Generate keto dinners, snacks, and desserts using familiar grocery staples like eggs, chicken, beef, avocado, cheese, broccoli, tuna, and cauliflower rice.
@@ -209,32 +206,44 @@ export default async function Home(): Promise<ReactElement> {
             </div>
           </section>
 
-          <section className="grid gap-8 py-8 lg:grid-cols-[0.9fr_1.1fr]" aria-labelledby="popular-us-title">
-            <div>
-              <p className="text-sm font-black uppercase tracking-[0.22em] text-emerald-800">
-                US keto search favorites
-              </p>
-              <h2
-                id="popular-us-title"
-                className="mt-3 font-serif text-3xl font-semibold text-slate-950 sm:text-4xl"
-              >
-                Popular keto meal ideas in the US
-              </h2>
-              <p className="mt-5 text-base leading-8 text-slate-600">
-                These are the kinds of quick keto meals American searchers often want: familiar, filling, low-carb, and easy to build from regular supermarket ingredients.
-              </p>
-            </div>
-            <div className="grid gap-3 sm:grid-cols-2">
-              {popularUsMeals.map((meal) => (
-                <div
-                  key={meal}
-                  className="border border-slate-200 bg-white px-4 py-3 text-sm font-semibold text-slate-800 shadow-sm"
+          {popularMeals.length > 0 && (
+            <section className="grid gap-8 py-8 lg:grid-cols-[0.9fr_1.1fr]" aria-labelledby="popular-meals-title">
+              <div>
+                <p className="text-sm font-black uppercase tracking-[0.22em] text-emerald-800">
+                  Keto search favorites
+                </p>
+                <h2
+                  id="popular-meals-title"
+                  className="mt-3 font-serif text-3xl font-semibold text-slate-950 sm:text-4xl"
                 >
-                  {meal}
-                </div>
-              ))}
-            </div>
-          </section>
+                  Popular keto meal ideas
+                </h2>
+                <p className="mt-5 text-base leading-8 text-slate-600">
+                  These quick keto meal ideas come from the recipe collection, so the list can stay fresh as new meals are added.
+                </p>
+              </div>
+              <div className="grid gap-3 sm:grid-cols-2">
+                {popularMeals.map((meal, index) => {
+                  const className =
+                    "border border-slate-200 bg-white px-4 py-3 text-sm font-semibold text-slate-800 shadow-sm transition duration-200 hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-[4px_4px_0_#fec445]";
+
+                  return meal.slug ? (
+                    <Link
+                      key={`${meal.slug}-${index}`}
+                      href={`/recipe/${meal.slug}`}
+                      className={className}
+                    >
+                      {meal.name}
+                    </Link>
+                  ) : (
+                    <div key={`${meal.name}-${index}`} className={className}>
+                      {meal.name}
+                    </div>
+                  );
+                })}
+              </div>
+            </section>
+          )}
 
           <section className="grid gap-8 py-10 lg:grid-cols-2" aria-labelledby="budget-keto-title">
             <div className="border border-slate-200 bg-white p-6 shadow-sm">
@@ -245,7 +254,7 @@ export default async function Home(): Promise<ReactElement> {
                 Budget-friendly keto meals
               </h2>
               <p className="mt-4 text-sm leading-7 text-slate-600">
-                Keto does not have to mean expensive specialty foods. Start with affordable proteins, frozen vegetables, and simple fats that are easy to find across the United States.
+                Keto does not have to mean expensive specialty foods. Start with affordable proteins, frozen vegetables, and simple fats that are easy to find in regular grocery stores.
               </p>
               <ul className="mt-6 grid gap-3 sm:grid-cols-2">
                 {budgetMeals.map((meal) => (
@@ -261,7 +270,7 @@ export default async function Home(): Promise<ReactElement> {
                 id="busy-americans-title"
                 className="font-serif text-3xl font-semibold text-slate-950"
               >
-                Keto meal planning for busy Americans
+                Keto meal planning for busy people
               </h2>
               <div className="mt-5 space-y-4">
                 {busyPlanningTips.map((tip) => (
@@ -323,7 +332,7 @@ export default async function Home(): Promise<ReactElement> {
                 Keto meal planner FAQ
               </h2>
               <p className="mt-4 text-base leading-8 text-slate-600">
-                Quick answers for US users comparing keto meal generators, low-carb recipes, and free meal planning tools.
+                Quick answers for people comparing keto meal generators, low-carb recipes, and free meal planning tools.
               </p>
             </div>
             <div className="mx-auto mt-8 max-w-4xl divide-y divide-slate-200 border border-slate-200 bg-white shadow-sm">

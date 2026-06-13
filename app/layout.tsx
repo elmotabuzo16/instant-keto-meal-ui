@@ -23,7 +23,7 @@ const GOOGLE_ANALYTICS_ID = "G-E4TE07PS41";
 export const metadata: Metadata = {
   metadataBase: new URL(DOMAIN),
   title: {
-    default: `${APP_NAME} | Free Keto Meal Generator for the US`,
+    default: `${APP_NAME} | Free Keto Meal Generator`,
     template: `%s | ${APP_NAME}`,
   },
   description: defaultSeoDescription,
@@ -57,11 +57,10 @@ export const metadata: Metadata = {
     ],
   },
   openGraph: {
-    title: `${APP_NAME} | Free Keto Meal Generator for the US`,
+    title: `${APP_NAME} | Free Keto Meal Generator`,
     description: defaultSeoDescription,
     url: DOMAIN,
     siteName: APP_NAME,
-    locale: "en_US",
     type: "website",
     images: [
       {
@@ -74,7 +73,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: `${APP_NAME} | Free Keto Meal Generator for the US`,
+    title: `${APP_NAME} | Free Keto Meal Generator`,
     description: defaultSeoDescription,
     images: [defaultOgImage],
   },
@@ -87,7 +86,7 @@ export default function RootLayout({
 }>) {
   return (
     <html
-      lang="en-US"
+      lang="en"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <Script
