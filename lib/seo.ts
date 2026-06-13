@@ -4,23 +4,26 @@ import { APP_NAME, DOMAIN, FB_APP_ID } from './config';
 const SITE_URL = DOMAIN.replace(/\/$/, '');
 
 export const defaultSeoDescription =
-  'Generate delicious and healthy Filipino keto meals in seconds. Browse low-carb recipes, nutrition details, ingredients, and cooking instructions for easier keto meal planning.';
+  'Use a free keto meal generator for quick low-carb meal ideas, simple keto recipes, and budget-friendly meal planning for busy people in the United States.';
 
 export const defaultSeoKeywords = [
-  'keto food',
-  'ketogenic recipes',
-  'low-carb meals',
-  'keto diet',
-  'keto meal planner',
-  'keto recipes',
-  'healthy fats',
-  'keto-friendly foods',
-  'keto Filipino meals',
   'keto meal generator',
+  'keto meal planner',
+  'keto meal plan generator',
+  'keto meal ideas',
+  'easy keto meals',
+  'low carb meal generator',
+  'low carb meal planner',
+  'keto recipes USA',
+  'keto diet meal plan',
+  'keto meals for weight loss',
+  'quick keto meals',
+  'free keto meal planner',
+  'low-carb recipes',
   'instant keto meal',
 ];
 
-export const defaultOgImage = '/categories/avocado.svg';
+export const defaultOgImage = '/opengraph-image';
 
 export const getCanonicalUrl = (path = '/'): string => {
   const normalizedPath = path.startsWith('/') ? path : `/${path}`;
@@ -53,6 +56,17 @@ export const buildSeoMetadata = ({
     },
     description,
     keywords,
+    robots: {
+      index: true,
+      follow: true,
+      googleBot: {
+        index: true,
+        follow: true,
+        'max-image-preview': 'large',
+        'max-snippet': -1,
+        'max-video-preview': -1,
+      },
+    },
     alternates: {
       canonical: canonicalUrl,
     },
@@ -61,12 +75,13 @@ export const buildSeoMetadata = ({
       description,
       url: canonicalUrl,
       siteName: APP_NAME,
+      locale: 'en_US',
       type,
       images: [
         {
           url: image,
           width: 1200,
-          height: 800,
+          height: 630,
           alt: title,
         },
       ],

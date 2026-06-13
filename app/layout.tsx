@@ -23,7 +23,7 @@ const GOOGLE_ANALYTICS_ID = "G-E4TE07PS41";
 export const metadata: Metadata = {
   metadataBase: new URL(DOMAIN),
   title: {
-    default: `${APP_NAME} | Low Carb & Keto Meals`,
+    default: `${APP_NAME} | Free Keto Meal Generator for the US`,
     template: `%s | ${APP_NAME}`,
   },
   description: defaultSeoDescription,
@@ -31,6 +31,18 @@ export const metadata: Metadata = {
   applicationName: APP_NAME,
   creator: APP_NAME,
   publisher: APP_NAME,
+  category: "food",
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+      "max-video-preview": -1,
+    },
+  },
   other: {
     "google-adsense-account": "ca-pub-7167271672127418",
   },
@@ -45,23 +57,24 @@ export const metadata: Metadata = {
     ],
   },
   openGraph: {
-    title: `${APP_NAME} | Low Carb & Keto Meals`,
+    title: `${APP_NAME} | Free Keto Meal Generator for the US`,
     description: defaultSeoDescription,
     url: DOMAIN,
     siteName: APP_NAME,
+    locale: "en_US",
     type: "website",
     images: [
       {
         url: defaultOgImage,
         width: 1200,
-        height: 800,
+        height: 630,
         alt: `${APP_NAME} keto meal ideas`,
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: `${APP_NAME} | Low Carb & Keto Meals`,
+    title: `${APP_NAME} | Free Keto Meal Generator for the US`,
     description: defaultSeoDescription,
     images: [defaultOgImage],
   },
@@ -74,7 +87,7 @@ export default function RootLayout({
 }>) {
   return (
     <html
-      lang="en"
+      lang="en-US"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <Script

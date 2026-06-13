@@ -8,6 +8,14 @@ import FeaturedMealsSkeleton from "@/components/featuredmeals/FeaturedMealsSkele
 import { fetchTags } from "@/lib/generatorAction";
 import { APP_NAME } from "@/lib/config";
 import { buildSeoMetadata, defaultSeoDescription } from "@/lib/seo";
+import {
+  buildFaqPageJsonLd,
+  buildOrganizationJsonLd,
+  buildWebApplicationJsonLd,
+  buildWebsiteJsonLd,
+  jsonLdScriptProps,
+  type FaqItem,
+} from "@/lib/structuredData";
 
 const featuredCategories = [
   {
@@ -48,10 +56,90 @@ const featuredCategories = [
   },
 ];
 
+const howItWorks = [
+  {
+    title: "Pick a meal type",
+    text: "Choose a keto meal, snack, or dessert based on what you need right now.",
+  },
+  {
+    title: "Filter by craving",
+    text: "Use categories like chicken, avocado, bacon wrapped, grilled, or chocolate to narrow the ideas.",
+  },
+  {
+    title: "Generate and cook",
+    text: "Get a low-carb recipe idea with ingredients, nutrition details, and cooking instructions.",
+  },
+];
+
+const popularUsMeals = [
+  "Bacon and avocado egg bowls",
+  "Bunless cheeseburger plates",
+  "Garlic butter chicken with broccoli",
+  "Steak salad with ranch or blue cheese",
+  "Buffalo chicken lettuce wraps",
+  "Taco bowls with cauliflower rice",
+];
+
+const budgetMeals = [
+  "Egg muffins with cheese and spinach",
+  "Tuna salad lettuce cups",
+  "Ground beef taco bowls",
+  "Chicken thighs with roasted frozen vegetables",
+  "Sausage and cabbage skillet",
+  "Cream cheese cucumber roll-ups",
+];
+
+const busyPlanningTips = [
+  "Plan two repeatable breakfasts, two packable lunches, and three quick dinners for the week.",
+  "Keep US grocery staples on hand: eggs, rotisserie chicken, canned tuna, ground beef, salad kits, cheese, avocado, and frozen broccoli.",
+  "Use generated recipes as starting points, then swap proteins or vegetables based on what is affordable near you.",
+];
+
+const homepageFaqs: FaqItem[] = [
+  {
+    question: "Is Instant Keto Meal a free keto meal planner?",
+    answer:
+      "Yes. Instant Keto Meal is a free keto meal generator and recipe idea tool that helps you find low-carb meals, snacks, and desserts without creating a paid meal plan.",
+  },
+  {
+    question: "Can I use these keto meal ideas for weight loss?",
+    answer:
+      "Many people in the United States use keto meals to support weight-loss goals, but results depend on calories, portions, health history, and consistency. Use the nutrition details as a planning aid and ask a qualified professional for personal medical advice.",
+  },
+  {
+    question: "What are easy keto meals for busy Americans?",
+    answer:
+      "Popular quick options include bunless burger bowls, egg bites, chicken salad lettuce wraps, taco bowls with cauliflower rice, steak salads, and garlic butter chicken with broccoli.",
+  },
+  {
+    question: "Does the generator include low-carb meal ideas?",
+    answer:
+      "Yes. The generator focuses on keto-friendly and low-carb meal ideas with ingredients, cooking steps, and nutrition details where available.",
+  },
+  {
+    question: "Are the recipes suitable for US grocery stores?",
+    answer:
+      "The homepage examples focus on ingredients commonly found in US grocery stores, such as eggs, chicken, ground beef, tuna, cheese, avocado, broccoli, salad greens, and cauliflower rice.",
+  },
+];
+
 export const metadata = buildSeoMetadata({
-  title: `${APP_NAME} | Low Carb & Keto Meals`,
+  title: `${APP_NAME} | Free Keto Meal Generator & Low Carb Meal Planner`,
   description: defaultSeoDescription,
   path: '/',
+  keywords: [
+    'keto meal generator',
+    'keto meal planner',
+    'keto meal plan generator',
+    'free keto meal planner',
+    'easy keto meals',
+    'quick keto meals',
+    'low carb meal generator',
+    'low carb meal planner',
+    'keto meals for weight loss',
+    'keto diet meal plan',
+    'keto recipes USA',
+  ],
 });
 
 export default async function Home(): Promise<ReactElement> {
@@ -59,47 +147,27 @@ export default async function Home(): Promise<ReactElement> {
 
   return (
     <>
+      <script {...jsonLdScriptProps(buildWebsiteJsonLd())} />
+      <script {...jsonLdScriptProps(buildOrganizationJsonLd())} />
+      <script {...jsonLdScriptProps(buildWebApplicationJsonLd())} />
+      <script {...jsonLdScriptProps(buildFaqPageJsonLd(homepageFaqs))} />
       <Header />
       <main className="flex-1 bg-zinc-50 text-slate-950">
-        <div className="mx-auto max-w-6xl px-4 py-12 sm:px-6 lg:px-8">
-          <section aria-label="Recipes by course" className="mb-14">
-            <h2 className="mb-8 text-center font-serif text-4xl font-semibold text-slate-950">
-              Recipes By Course
-            </h2>
-            <div className="grid grid-cols-3 gap-x-4 gap-y-8 sm:grid-cols-6 sm:gap-x-5">
-              {featuredCategories.map((category) => (
-                <Link
-                  key={category.title}
-                  href={category.href}
-                  className="group block text-center"
-                >
-                  <span
-                    className="mx-auto block aspect-square w-full max-w-32 overflow-hidden rounded-full border-4 border-white bg-slate-200 shadow-sm transition duration-200 group-hover:-translate-x-0.5 group-hover:-translate-y-0.5 group-hover:shadow-[5px_5px_0_#fec445] sm:max-w-36"
-                    style={{
-                      backgroundImage: `url(${category.image})`,
-                      backgroundPosition: "center",
-                      backgroundSize: "cover",
-                    }}
-                  />
-                  <span className="mt-3 block font-serif text-base font-semibold text-slate-950 transition-colors group-hover:text-emerald-700 sm:text-xl">
-                    {category.title}
-                  </span>
-                </Link>
-              ))}
-            </div>
-          </section>
-
+        <div className="mx-auto max-w-6xl px-4 pb-12 sm:px-6 lg:px-8">
           <div className="relative left-1/2 w-screen -translate-x-1/2 overflow-hidden bg-[#F4F2F0] py-12">
             <div className="relative mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
               <section id="homepage" className="mb-12 text-center">
-                <h1 className="text-4xl font-semibold tracking-tight text-slate-950">
-                  Not sure what keto meal to make?
+                <p className="text-sm font-black uppercase tracking-[0.24em] text-emerald-800">
+                  Free keto meal planner for US kitchens
+                </p>
+                <h1 className="mx-auto mt-4 max-w-4xl font-serif text-4xl font-semibold tracking-tight text-slate-950 sm:text-5xl">
+                  Keto meal generator for quick, low-carb meal ideas
                 </h1>
                 <p className="mx-auto mt-6 max-w-3xl text-base leading-8 text-slate-600">
-                  Instant Keto Meal helps you find low-carb meal ideas fast, with simple filters and nutrition details to make planning easier.
+                  Instant Keto Meal helps US home cooks find easy keto meals, low-carb recipes, and simple meal planning ideas without digging through endless recipe lists.
                 </p>
                 <p className="mx-auto mt-4 max-w-2xl text-base leading-8 text-slate-600">
-                  Choose a meal type, pick a category, and get a keto-friendly recipe in seconds. <strong>Let&apos;s get cooking!</strong>
+                  Generate keto dinners, snacks, and desserts using familiar grocery staples like eggs, chicken, beef, avocado, cheese, broccoli, tuna, and cauliflower rice.
                 </p>
               </section>
 
@@ -108,6 +176,133 @@ export default async function Home(): Promise<ReactElement> {
               </section>
             </div>
           </div>
+
+          <section className="py-14" aria-labelledby="how-it-works-title">
+            <div className="mx-auto max-w-3xl text-center">
+              <h2
+                id="how-it-works-title"
+                className="font-serif text-3xl font-semibold text-slate-950 sm:text-4xl"
+              >
+                How the keto meal generator works
+              </h2>
+              <p className="mt-4 text-base leading-8 text-slate-600">
+                Use it when you need fast keto meal ideas for breakfast, lunch, dinner, snacks, or a simple low-carb meal plan.
+              </p>
+            </div>
+            <div className="mt-8 grid gap-4 md:grid-cols-3">
+              {howItWorks.map((item, index) => (
+                <article
+                  key={item.title}
+                  className="border border-slate-200 bg-white p-6 shadow-sm"
+                >
+                  <span className="flex h-9 w-9 items-center justify-center bg-emerald-800 text-sm font-black text-white shadow-[3px_3px_0_#fec445]">
+                    {index + 1}
+                  </span>
+                  <h3 className="mt-5 text-lg font-black text-slate-950">
+                    {item.title}
+                  </h3>
+                  <p className="mt-3 text-sm leading-7 text-slate-600">
+                    {item.text}
+                  </p>
+                </article>
+              ))}
+            </div>
+          </section>
+
+          <section className="grid gap-8 py-8 lg:grid-cols-[0.9fr_1.1fr]" aria-labelledby="popular-us-title">
+            <div>
+              <p className="text-sm font-black uppercase tracking-[0.22em] text-emerald-800">
+                US keto search favorites
+              </p>
+              <h2
+                id="popular-us-title"
+                className="mt-3 font-serif text-3xl font-semibold text-slate-950 sm:text-4xl"
+              >
+                Popular keto meal ideas in the US
+              </h2>
+              <p className="mt-5 text-base leading-8 text-slate-600">
+                These are the kinds of quick keto meals American searchers often want: familiar, filling, low-carb, and easy to build from regular supermarket ingredients.
+              </p>
+            </div>
+            <div className="grid gap-3 sm:grid-cols-2">
+              {popularUsMeals.map((meal) => (
+                <div
+                  key={meal}
+                  className="border border-slate-200 bg-white px-4 py-3 text-sm font-semibold text-slate-800 shadow-sm"
+                >
+                  {meal}
+                </div>
+              ))}
+            </div>
+          </section>
+
+          <section className="grid gap-8 py-10 lg:grid-cols-2" aria-labelledby="budget-keto-title">
+            <div className="border border-slate-200 bg-white p-6 shadow-sm">
+              <h2
+                id="budget-keto-title"
+                className="font-serif text-3xl font-semibold text-slate-950"
+              >
+                Budget-friendly keto meals
+              </h2>
+              <p className="mt-4 text-sm leading-7 text-slate-600">
+                Keto does not have to mean expensive specialty foods. Start with affordable proteins, frozen vegetables, and simple fats that are easy to find across the United States.
+              </p>
+              <ul className="mt-6 grid gap-3 sm:grid-cols-2">
+                {budgetMeals.map((meal) => (
+                  <li key={meal} className="text-sm text-slate-700">
+                    {meal}
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            <div className="border border-slate-200 bg-[#F4F2F0] p-6 shadow-sm" aria-labelledby="busy-americans-title">
+              <h2
+                id="busy-americans-title"
+                className="font-serif text-3xl font-semibold text-slate-950"
+              >
+                Keto meal planning for busy Americans
+              </h2>
+              <div className="mt-5 space-y-4">
+                {busyPlanningTips.map((tip) => (
+                  <p key={tip} className="text-sm leading-7 text-slate-700">
+                    {tip}
+                  </p>
+                ))}
+              </div>
+            </div>
+          </section>
+
+          <section aria-labelledby="recipes-by-course-title" className="py-12">
+            <h2
+              id="recipes-by-course-title"
+              className="mb-8 text-center font-serif text-4xl font-semibold text-slate-950"
+            >
+              Browse keto recipes by course
+            </h2>
+            <div className="grid grid-cols-3 gap-x-4 gap-y-8 sm:grid-cols-6 sm:gap-x-5">
+              {featuredCategories.map((category) => (
+                <Link
+                  key={category.title}
+                  href={category.href}
+                  className="group block text-center"
+                >
+                  <span className="mx-auto block aspect-square w-full max-w-32 overflow-hidden rounded-full border-4 border-white bg-slate-200 shadow-sm transition duration-200 group-hover:-translate-x-0.5 group-hover:-translate-y-0.5 group-hover:shadow-[5px_5px_0_#fec445] sm:max-w-36">
+                    <img
+                      src={category.image}
+                      alt={`${category.title} keto recipe ideas`}
+                      loading="lazy"
+                      decoding="async"
+                      className="h-full w-full object-cover"
+                    />
+                  </span>
+                  <span className="mt-3 block font-serif text-base font-semibold text-slate-950 transition-colors group-hover:text-emerald-700 sm:text-xl">
+                    {category.title}
+                  </span>
+                </Link>
+              ))}
+            </div>
+          </section>
 
           <Suspense
             fallback={(
@@ -118,6 +313,32 @@ export default async function Home(): Promise<ReactElement> {
           >
             <FeaturedMealsSection />
           </Suspense>
+
+          <section className="py-14" aria-labelledby="keto-faq-title">
+            <div className="mx-auto max-w-3xl text-center">
+              <h2
+                id="keto-faq-title"
+                className="font-serif text-3xl font-semibold text-slate-950 sm:text-4xl"
+              >
+                Keto meal planner FAQ
+              </h2>
+              <p className="mt-4 text-base leading-8 text-slate-600">
+                Quick answers for US users comparing keto meal generators, low-carb recipes, and free meal planning tools.
+              </p>
+            </div>
+            <div className="mx-auto mt-8 max-w-4xl divide-y divide-slate-200 border border-slate-200 bg-white shadow-sm">
+              {homepageFaqs.map((faq) => (
+                <article key={faq.question} className="p-6">
+                  <h3 className="text-lg font-black text-slate-950">
+                    {faq.question}
+                  </h3>
+                  <p className="mt-3 text-sm leading-7 text-slate-600">
+                    {faq.answer}
+                  </p>
+                </article>
+              ))}
+            </div>
+          </section>
         </div>
       </main>
       <Footer />

@@ -10,7 +10,7 @@ type SitemapEntry = {
   loc: string;
   lastmod?: string;
   changefreq?: 'always' | 'hourly' | 'daily' | 'weekly' | 'monthly' | 'yearly' | 'never';
-  priority?: string;
+  priority?: string | number;
 };
 
 const escapeXml = (value: string): string =>
@@ -49,7 +49,7 @@ ${entries
     ({ loc, lastmod, changefreq, priority }) => `<url><loc>${escapeXml(loc)}</loc>${
       lastmod ? `<lastmod>${escapeXml(lastmod)}</lastmod>` : ''
     }${changefreq ? `<changefreq>${changefreq}</changefreq>` : ''}${
-      priority ? `<priority>${priority}</priority>` : ''
+      priority ? `<priority>${escapeXml(String(priority))}</priority>` : ''
     }</url>`
   )
   .join('\n')}
@@ -120,7 +120,6 @@ export const fetchCategorySitemapEntries = async (): Promise<SitemapEntry[]> => 
 };
 
 export const sitemapLocations = [
-  absoluteUrl('/sitemap-0.xml'),
   absoluteUrl('/server-sitemap.xml'),
   absoluteUrl('/categories-sitemap.xml'),
 ];
